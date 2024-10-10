@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-color: #04879c;       /* First color */
+  --secondary-color: #0c3c78;     /* Second color */
+  --tertiary-color: #090030;      /* Third color */
+  --quaternary-color: #c30a49;    /* Fourth color */
+}
+
+code, pre, a, p, h1, h2, h3, h4, h5, h6, div {
+    white-space: pre-wrap;       /* Since CSS 2.1 */
+    white-space: -moz-pre-wrap;  
+    word-wrap: break-word;       
+}
+
+body {
+  padding: 1cm;
+  background: beige;
+  color: var(--primary-color); /* Default text color */
+}
+
+/* Paragraph styling */
+p {
+  color: var(--secondary-color);
+}
+
+/* Headings styling */
+h1 {
+  padding-left: 10px;
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  background-color: var(--tertiary-color);
+}
+
+h2 {
+  padding-left: 10px;
+  font-size: 1.4rem;
+  color: var(--quaternary-color); /* Updated to quaternary color */
+}
+
+h3 {
+  color: var(--tertiary-color);
+}
+
+h4 {
+  color: var(--primary-color);
+}
+
+h5 {
+  color: var(--secondary-color);
+}
+
+h6 {
+  color: var(--quaternary-color);
+}
+
+/* Optional: additional styling for other text-related elements */
+a {
+  color: var(--quaternary-color);
+  text-decoration: underline;
+}
+
+button {
+  /*background-color: var(--primary-color);*/
+  color: var(--primary-color);
+  padding: 4px;
+  border:  4px;
+  border-style: double ridge double groove;
+}
