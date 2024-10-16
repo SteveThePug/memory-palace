@@ -5,8 +5,8 @@ use crate::db::User;
 use std::env;
 use jsonwebtoken::{decode, encode, DecodingKey, EncodingKey, Header, TokenData};
 
-pub fn make_token<T: serde::Serialize>(
-    content: &T
+pub fn make_token(
+    content: &User
 ) -> Result<String, jsonwebtoken::errors::Error> {
     // Generate JWT token
     let secret = env::var("STP_SECRET").expect("Failed to get environment variable STP_SECRET");
@@ -14,15 +14,15 @@ pub fn make_token<T: serde::Serialize>(
     Ok(token)
 }
 
-pub fn decode_token<T: serde::de::DeserializeOwned>(
+pub fn decode_token(
     token: &str
-) -> Result<TokenData<T>, jsonwebtoken::errors::Error> {
+) -> Result<TokenData<User>, jsonwebtoken::errors::Error> {
     // Verify JWT token
     let secret = env::var("STP_SECRET").expect("Failed to get environment variable STP_SECRET");
     let mut validation = jsonwebtoken::Validation::default();
     validation.validate_exp = false;
     validation.set_required_spec_claims(&[""]);
-    let token_data = decode::<T>(&token, &DecodingKey::from_secret(secret.as_ref()), &validation)?;
+    let token_data = decode(&token, &DecodingKey::from_secret(secret.as_ref()), &validation)?;
     Ok(token_data)
 }
 
@@ -39,7 +39,7 @@ pub async fn verify_token(
                 let token = &auth_str[7..];
 
                 // Decode the token
-                if let Ok(claims) = decode_token::<User>(token) {
+                if let Ok(claims) = decode_token(token) {
                     let user = claims.claims;
 
                     // Attach the user info to the request extensions for use in the next service

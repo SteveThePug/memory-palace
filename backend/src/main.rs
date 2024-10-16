@@ -19,6 +19,7 @@ async fn main() -> std::io::Result<()> {
     dotenv().ok();
 
     let db_url = std::env::var("DB_URL").expect("DB_URL must be set");
+    let port: u16 = std::env::var("PORT").expect("PORT must be set").parse().expect("PORT should be an unsigned integer");
 
     let db = match db::init(&db_url).await {
         Ok(pool) => pool,
@@ -30,12 +31,13 @@ async fn main() -> std::io::Result<()> {
         }
     };
 
-    let ip = "127.0.0.1";
-    let port = 8080;
+    let ip = "0.0.0.0"; // Changed to bind to all available interfaces
     println!("Hosting server on http://{}:{}", ip, port);
     HttpServer::new(move || {
         let cors = Cors::default()
-            .allowed_origin("http://localhost:3000")  // Replace with your frontend URL
+            .allowed_origin_fn(|origin, _req_head| {
+                origin.as_bytes().ends_with(b"localhost:3000") // Allow any subdomain of localhost:3000
+            })
             .allowed_methods(vec!["GET", "POST", "PUT", "DELETE", "PATCH"])
             .allowed_headers(vec![http::header::AUTHORIZATION, http::header::CONTENT_TYPE])
             .max_age(3600);

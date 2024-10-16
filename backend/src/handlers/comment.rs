@@ -60,7 +60,7 @@ async fn delete_comment(
 
     let user_id = user.user_id;
 
-    match check_user_owns_comment(pool.get_ref(), user_id, comment_id).await {
+    match check_user_owns_comment(pool.get_ref(), user_id.unwrap(), comment_id).await {
         Ok(false) => return HttpResponse::Unauthorized().body(USER_MISMATCH),
         Err(sqlx::Error::RowNotFound) => return HttpResponse::NotFound().body(COMMENT_NOT_FOUND),
         Err(err) => return HttpResponse::InternalServerError().body(err.to_string()),
@@ -95,7 +95,7 @@ async fn edit_comment(
 
     let user_id = user.user_id;
 
-    match check_user_owns_comment(pool.get_ref(), user_id, comment_id).await {
+    match check_user_owns_comment(pool.get_ref(), user_id.unwrap(), comment_id).await {
         Ok(false) => return HttpResponse::Unauthorized().body(USER_MISMATCH),
         Err(sqlx::Error::RowNotFound) => return HttpResponse::NotFound().body(COMMENT_NOT_FOUND),
         Err(err) => return HttpResponse::InternalServerError().body(err.to_string()),
