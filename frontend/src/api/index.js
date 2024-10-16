@@ -17,7 +17,7 @@ export const fetchPosts = () => API.get('/posts');
 export const fetchPost = (postId) => API.get(`/post/${postId}`);
 export const createPost = (post) => API.post('/post', post);
 export const deletePost = (postId) => API.delete(`/post/${postId}`);
-export const updatePost = (postId, updatedPost) => API.patch(`/post/${postId}`, updatedPost);
+export const updatePost = (postId, post) => API.patch(`/post/${postId}`, post);
 
 // Comment APIs
 export const addComment = (comment) => API.post(`/comment`, comment);
