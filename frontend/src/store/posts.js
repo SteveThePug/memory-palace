@@ -6,7 +6,7 @@ const postsSlice = createSlice({
   initialState: [],
   reducers: {
     postsPush(state, action) {
-      state.unshift(action.payload)
+      state.unshift({...action.payload, comments: []})
       return state
     },
     postsSet(state, action) {

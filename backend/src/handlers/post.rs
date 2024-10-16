@@ -50,7 +50,7 @@ pub async fn check_user_owns_post(
         .fetch_one(pool)
         .await?;
 
-    Ok(post.user_id == user_id)
+    Ok(post.user_id.unwrap() == user_id)
 }
 
 async fn get_post_comments(pool: &SqlitePool, post_id: i64) -> Result<Vec<CommentResponse>, sqlx::Error> {
@@ -97,7 +97,7 @@ async fn get_posts(pool: web::Data<SqlitePool>) -> HttpResponse {
     for post in posts {
         let mut post_response = PostResponse {
             post_id: post.post_id.unwrap(),
-            user_id: post.user_id,
+            user_id: post.user_id.unwrap(),
             title: post.title,
             markdown: post.markdown,
             created_at: post.created_at.unwrap(),
@@ -106,7 +106,7 @@ async fn get_posts(pool: web::Data<SqlitePool>) -> HttpResponse {
         };
 
         // Get author information
-        post_response.author = match get_username(pool.as_ref(), post.user_id).await {
+        post_response.author = match get_username(pool.as_ref(), post.user_id.unwrap()).await {
             Err(e) => return HttpResponse::InternalServerError().body(e.to_string()),
             Ok(username) => username,
         };
@@ -133,7 +133,7 @@ async fn get_post(pool: web::Data<SqlitePool>, post_id: web::Path<i64>) -> HttpR
 
     let mut post_response = PostResponse {
         post_id: post.post_id.unwrap(),
-        user_id: post.user_id,
+        user_id: post.user_id.unwrap(),
         title: post.title,
         markdown: post.markdown,
         created_at: post.created_at.unwrap(),
@@ -142,7 +142,7 @@ async fn get_post(pool: web::Data<SqlitePool>, post_id: web::Path<i64>) -> HttpR
     };
 
     // Get author information
-    post_response.author = match get_username(pool.as_ref(), post.user_id).await {
+    post_response.author = match get_username(pool.as_ref(), post.user_id.unwrap()).await {
         Err(e) => return HttpResponse::InternalServerError().body(e.to_string()),
         Ok(username) => username,
     };

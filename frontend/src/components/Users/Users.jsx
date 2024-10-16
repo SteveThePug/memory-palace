@@ -13,7 +13,7 @@ export default function Users() {
 
   return (
     <div>
-        <h1>USERS</h1>
+    <h1>USERS</h1>
       {users.map((userData, index) => (
         <User userData={userData} key={index} />
       ))}

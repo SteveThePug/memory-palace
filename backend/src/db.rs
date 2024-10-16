@@ -5,7 +5,7 @@ use sqlx::{migrate::MigrateDatabase, Error, Sqlite, SqlitePool};
 #[derive(sqlx::FromRow, Serialize, Deserialize, Debug, Default)]
 pub struct Post {
     pub post_id: Option<i64>,
-    pub user_id: i64,
+    pub user_id: Option<i64>,
     pub title: String,
     pub markdown: String,
     pub created_at: Option<NaiveDateTime>,

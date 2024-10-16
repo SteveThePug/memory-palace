@@ -23,6 +23,7 @@ export const { userSet, userDelete } = userSlice.actions
 export const userSignIn = (creds) => async(dispatch) => {
   try {
     const { data } = await api.signIn(creds);
+    console.log(data);
     localStorage.setItem('token', JSON.stringify(data))
     dispatch(userSet(data))
   }
