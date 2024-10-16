@@ -1,19 +1,55 @@
 use crate::db::{Comment, User};
 use crate::handlers::response_body::*;
-use actix_web::{delete, patch, post, web, HttpMessage, HttpRequest, HttpResponse};
+use actix_web::{get, delete, patch, post, web, HttpMessage, HttpRequest, HttpResponse};
 use sqlx::SqlitePool;
+use crate::handlers::user::get_username;
+
+const N: u32 = 10;
+const GET_COMMENTS: &str = "SELECT * FROM comment LIMIT ?";
+const GET_COMMENT: &str = "SELECT * FROM comment WHERE comment_id = ?";
 
 async fn check_user_owns_comment(
     pool: &SqlitePool,
     user_id: i64,
     comment_id: i64,
 ) -> Result<bool, sqlx::Error> {
-    let query = "SELECT user_id FROM comment WHERE id = ?";
-    let comment_user_id = sqlx::query_scalar::<_, i64>(query)
+    let comment: Comment = sqlx::query_as(GET_COMMENT)
         .bind(comment_id)
         .fetch_one(pool)
         .await?;
-    Ok(user_id == comment_user_id)
+    Ok(user_id == comment.user_id)
+}
+
+#[get("/comments")]
+async fn get_comments(pool: web::Data<SqlitePool>) -> HttpResponse {
+    let comments: Vec<Comment> = match sqlx::query_as(GET_COMMENTS)
+        .bind(N)
+        .fetch_all(pool.as_ref())
+        .await
+    {
+        Ok(comments) => comments,
+        Err(e) => return HttpResponse::InternalServerError().body(e.to_string()),
+    };
+
+    let mut response: Vec<CommentResponse> = Vec::new();
+    for comment in comments {
+        let mut comment_response = CommentResponse {
+            comment_id: comment.comment_id.unwrap(),
+            post_id: comment.post_id,
+            user_id: comment.user_id, // Assuming created_at is an Option<NaiveDateTime>
+            created_at: comment.created_at.unwrap(),
+            content: comment.content,
+            author: String::new(), // Placeholder for author, will be set later
+        };
+
+        comment_response.author = match get_username(pool.as_ref(), comment.user_id).await {
+            Err(e) => return HttpResponse::InternalServerError().body(e.to_string()),
+            Ok(username) => username,
+        };
+        response.push(comment_response);
+    }
+
+    HttpResponse::Ok().json(response)
 }
 
 #[post("/comment")]

@@ -14,10 +14,26 @@ const SIGN_UP: &str = "
     INSERT INTO user (username, email, password, created_at)
     VALUES (?, ?, ?, CURRENT_TIMESTAMP)
 ";
+
 const DELETE_USER: &str = "
     DELETE FROM user
     WHERE user_id = ?
 ";
+
+const GET_USER: &str = "
+    SELECT *
+    FROM user
+    WHERE user_id = ?
+";
+
+pub async fn get_username(pool: &SqlitePool, user_id: i64) -> Result<String, sqlx::Error> {
+    // Get username
+    let user: User = sqlx::query_as(GET_USER)
+        .bind(user_id)
+        .fetch_one(pool)
+        .await?;
+    return Ok(user.username);
+}
 
 #[get("/users")]
 async fn get_users(pool: web::Data<SqlitePool>) -> HttpResponse {

@@ -1,5 +1,6 @@
 use crate::db::{Comment, Post, User};
 use crate::handlers::response_body::*;
+use crate::handlers::user::get_username;
 use actix_web::{delete, get, patch, post, web, HttpMessage, HttpRequest, HttpResponse};
 use sqlx::SqlitePool;
 
@@ -32,11 +33,6 @@ const GET_POSTS: &str = "
     LIMIT ?
 ";
 
-const GET_USER: &str = "
-    SELECT *
-    FROM user
-    WHERE user_id = ?
-";
 
 const GET_POST_COMMENTS: &str = "
     SELECT *
@@ -83,14 +79,6 @@ async fn get_post_comments(pool: &SqlitePool, post_id: i64) -> Result<Vec<Commen
     Ok(comment_responses)
 }
 
-async fn get_username(pool: &SqlitePool, user_id: i64) -> Result<String, sqlx::Error> {
-    // Get username
-    let user: User = sqlx::query_as(GET_USER)
-        .bind(user_id)
-        .fetch_one(pool)
-        .await?;
-    return Ok(user.username);
-}
 
 #[get("/posts")]
 async fn get_posts(pool: web::Data<SqlitePool>) -> HttpResponse {
