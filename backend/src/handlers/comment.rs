@@ -29,10 +29,7 @@ async fn add_comment(
         None => return HttpResponse::Unauthorized().body(INVALID_AUTH),
     };
 
-    let user_id = match user.id {
-        Some(user_id) => user_id,
-        None => return HttpResponse::Unauthorized().body(NO_USER_ID),
-    };
+    let user_id = user.user_id;
 
     let insert_query = "INSERT INTO comment (post_id, user_id, content) VALUES (?, ?, ?)";
     match sqlx::query(insert_query)
@@ -61,10 +58,7 @@ async fn delete_comment(
         None => return HttpResponse::Unauthorized().body(INVALID_AUTH),
     };
 
-    let user_id = match user.id {
-        Some(user_id) => user_id,
-        None => return HttpResponse::Unauthorized().body(NO_USER_ID)
-    };
+    let user_id = user.user_id;
 
     match check_user_owns_comment(pool.get_ref(), user_id, comment_id).await {
         Ok(false) => return HttpResponse::Unauthorized().body(USER_MISMATCH),
@@ -99,10 +93,7 @@ async fn edit_comment(
         None => return HttpResponse::Unauthorized().body(INVALID_AUTH),
     };
 
-    let user_id = match user.id {
-        Some(user_id) => user_id,
-        None => return HttpResponse::Unauthorized().body(NO_USER_ID)
-    };
+    let user_id = user.user_id;
 
     match check_user_owns_comment(pool.get_ref(), user_id, comment_id).await {
         Ok(false) => return HttpResponse::Unauthorized().body(USER_MISMATCH),
