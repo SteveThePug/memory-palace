@@ -5,14 +5,15 @@ import { usersGet } from '../../store/users.js';
 
 export default function Users() {
   const dispatch = useDispatch();
-  const users = useSelector((state) => state.users);
+  const {users} = useSelector((state) => state);
 
   useEffect(() => {
     dispatch(usersGet());
   }, [dispatch]);
 
   return (
-    <div className='border-2 p-2'>
+    <div>
+        <h1>USERS</h1>
       {users.map((userData, index) => (
         <User userData={userData} key={index} />
       ))}

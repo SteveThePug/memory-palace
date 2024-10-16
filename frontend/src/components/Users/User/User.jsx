@@ -1,10 +1,13 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import 'katex/dist/katex.min.css';
-import { useSelector } from 'react-redux';
-import * as api from '../../../api';
 
 export default function User({ userData }) {
-  let { username } = userData;
-  return (<h1>{username}</h1>);
+    let { username, created_at } = userData;
+    return (
+        <div>
+            <h2>{username}</h2>
+            <p>{created_at}</p>
+        </div>
+    );
 }

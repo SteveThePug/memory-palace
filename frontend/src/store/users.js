@@ -12,15 +12,14 @@ const usersSlice = createSlice({
   },
 })
 
-export const {usersSet} = usersSlice.actions
+export const { usersSet } = usersSlice.actions
 
-export const usersGet = () => async(dispatch) => {
+export const usersGet = () => async (dispatch) => {
   try {
     const { data } = await api.fetchUsers();
-    dispatch(usersSet(data))
-}
-  catch (error) {
-    console.log(error.message)
+    dispatch(usersSet(data));
+  } catch (error) {
+    console.error('Error fetching users:', error.message);
   }
 }
 
