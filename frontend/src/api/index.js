@@ -20,6 +20,7 @@ export const deletePost = (postId) => API.delete(`/post/${postId}`);
 export const updatePost = (postId, post) => API.patch(`/post/${postId}`, post);
 
 // Comment APIs
+export const fetchComments = () => API.get(`/comments`);
 export const addComment = (comment) => API.post(`/comment`, comment);
 export const deleteComment = (commentId) => API.delete(`/comment/${commentId}`);
 export const updateComment = (commentId, updatedComment) => API.patch(`/comment/${commentId}`, updatedComment);

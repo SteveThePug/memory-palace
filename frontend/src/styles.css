@@ -37,18 +37,18 @@
 /* Variables */
 :root {
     /* Blue - Beige */
-  /* --primary: #153448;
+  --primary: #153448;
   --secondary: #3C5B6F;
   --tertiary: #948979;
   --quaternary: #f5bb78;
-  --background: #DFD0B8; */
+  --background: #DFD0B8;
 
     /* Blue - Turqouise */
-  --primary: #161D6F;
+  /* --primary: #161D6F;
   --secondary: #0B2F9F;
   --tertiary: #98DED9;
   --quaternary: #C7FFD8;
-  --background: #C2EFD1;
+  --background: #C2EFD1; */
 
     /* Red - Blue */
   /* --primary: #ff204e;

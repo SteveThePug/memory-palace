@@ -25,7 +25,8 @@ export default function Posts() {
       
       {user && <button onClick={openFormModal}>Upload</button>}
       
-      <div className='border-2 p-2'>
+      <div>
+        <h1>POSTS</h1>
         {posts.map((postData, index) => (<Post postData={postData} key={index}/>))}
       </div>
     </>

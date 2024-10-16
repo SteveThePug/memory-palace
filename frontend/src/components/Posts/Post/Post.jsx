@@ -8,40 +8,43 @@ import { useSelector } from 'react-redux';
 import * as api from '../../../api';
 
 export default function Post({ postData }) {
-  let {post, comments} = postData;
+  const { post_id, title, markdown, author, comments } = postData;
   const user = useSelector((state) => state.user?.result);
-  const [isCommenting, setIsCommenting] = useState(true);
+  const [isCommenting, setIsCommenting] = useState(false);
   const [comment, setComment] = useState('');
 
   const handleCommentSubmit = async () => {
-    let commentData = {content: comment};
-    console.log(user);
-    commentData.post_id = post.id;
-    commentData.user_id = user.id;
+    const commentData = {
+      content: comment,
+      post_id,
+      user_id: user.user_id,
+    };
     console.log(commentData);
-    await api.addComment({commentData});
+    await api.addComment(commentData);
     setIsCommenting(false); // Hide the comment input after submitting
   };
 
   return (
     <div className='m-2 text-clip border-2 border-pink bg-stone-200'>
-      <h1 className='text-stone-1000 bg-yellow-500'>{post?.user?.username}</h1>
-      <h1 className='text-stone-1000 bg-pink-500'>{post?.title}</h1>
+      <h1 className='text-stone-1000 bg-yellow-500'>{author}</h1>
+      <h1 className='text-stone-1000 bg-pink-500'>{title}</h1>
       <div className="overflow-y-scroll">
         <ReactMarkdown
           className='p-2'
           remarkPlugins={[remarkMath, remarkGfm]}
           rehypePlugins={[rehypeKatex]}
         >
-          {post.markdown}
+          {markdown}
         </ReactMarkdown>
       </div>
-      
+
       <div className='border-2 p-2'>
-        {comments.map(({comment, user}, index) => (<>
-          <h3>{user.username}</h3>
-          <h2>{comment}</h2>
-        </>))}
+        {comments.map((comment, index) => (
+          <div key={index}>
+            <h3>{comment.author}</h3>
+            <p>{comment.content}</p>
+          </div>
+        ))}
       </div>
 
       {(user && !isCommenting) && (
@@ -63,7 +66,7 @@ export default function Post({ postData }) {
             Cancel
           </button>
         </div>
-        )}
+      )}
     </div>
   );
 }
