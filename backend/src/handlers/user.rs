@@ -92,7 +92,11 @@ async fn sign_in(pool: web::Data<SqlitePool>, user: web::Json<User>) -> HttpResp
 
     if verify(&user.password, &db_user.password).unwrap_or(false) {
         match make_token(&db_user) {
-            Ok(token) => HttpResponse::Ok().body(token),
+            Ok(token) => {
+                    let user_response = UserResponse{user_id: db_user.user_id.unwrap(), username: db_user.username, created_at: db_user.created_at.unwrap()};
+                    HttpResponse::Ok().json(
+                        TokenResponse{token, user: user_response})
+                    }
             Err(_) => HttpResponse::InternalServerError().body(TOKEN_FAILURE),
         }
     } else {
@@ -125,7 +129,10 @@ async fn sign_up(pool: web::Data<SqlitePool>, user: web::Json<User>) -> HttpResp
             };
 
             match make_token(&db_user) {
-                Ok(token) => HttpResponse::Ok().body(token),
+                Ok(token) => {
+                    let user_response = UserResponse{user_id: db_user.user_id.unwrap(), username: db_user.username, created_at: db_user.created_at.unwrap()};
+                    HttpResponse::Ok().json(TokenResponse{token, user: user_response})
+                }
                 Err(_) => HttpResponse::InternalServerError().body(TOKEN_FAILURE),
             }
         }

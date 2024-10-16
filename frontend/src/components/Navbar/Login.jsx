@@ -66,7 +66,7 @@ export default function Login() {
         </div>
 
         {/* Email (only for signup) */}
-        {isSignup && (
+        {
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email
@@ -77,10 +77,9 @@ export default function Login() {
               type="email"
               onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              required
             />
           </div>
-        )}
+        }
 
         {/* Password */}
         <div className="mb-4">

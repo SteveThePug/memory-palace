@@ -33,6 +33,7 @@ pub async fn verify_token(
     // Pre-processing: Checking Authorization header
     if let Some(auth_header) = req.headers().get(AUTHORIZATION) {
         if let Ok(auth_str) = auth_header.to_str() {
+            println!("{}!", auth_str);
             // Ensure the header starts with "Bearer "
             if auth_str.starts_with("Bearer ") {
                 // Extract the token by removing the "Bearer " prefix

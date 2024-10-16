@@ -14,7 +14,7 @@ export default function App() {
   const dispatch = useDispatch();
   
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem('profile'));
+    const token = JSON.parse(localStorage.getItem('token'));
     if (token) dispatch(userSet(token));
   }, [dispatch]);
   

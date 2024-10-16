@@ -6,10 +6,12 @@ const API = axios.create({baseURL});
 
 // Add authorization token to header
 API.interceptors.request.use((req) => {
-  if(localStorage.getItem('profile')) {
-    req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem('profile')).token}`
+  const token = JSON.parse(localStorage.getItem('token')).token;
+  console.log(token)
+  if (token) {
+    req.headers.Authorization = `Bearer ${token}`;
   }
-  return req
+  return req;
 })
 
 // Post APIs

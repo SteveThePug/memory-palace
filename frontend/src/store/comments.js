@@ -19,7 +19,7 @@ export const commentsGet = () => async (dispatch) => {
     const { data } = await api.fetchComments();
     dispatch(commentsSet(data));
   } catch (error) {
-    console.error('Error fetching users:', error.message);
+    console.error('Error fetching comments:', error.message);
   }
 }
 

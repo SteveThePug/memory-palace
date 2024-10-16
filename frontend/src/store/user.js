@@ -23,7 +23,7 @@ export const { userSet, userDelete } = userSlice.actions
 export const userSignIn = (creds) => async(dispatch) => {
   try {
     const { data } = await api.signIn(creds);
-    localStorage.setItem('profile', JSON.stringify(data))
+    localStorage.setItem('token', JSON.stringify(data))
     dispatch(userSet(data))
   }
   catch (error) {
@@ -34,7 +34,7 @@ export const userSignIn = (creds) => async(dispatch) => {
 export const userSignUp = (creds) => async(dispatch) => {
   try {
     const { data } = await api.signUp(creds);
-    localStorage.setItem('profile', JSON.stringify(data))
+    localStorage.setItem('token', JSON.stringify(data))
     dispatch(userSet(data))
   }
   catch (error) {
@@ -44,7 +44,7 @@ export const userSignUp = (creds) => async(dispatch) => {
 
 export const userLogOut = () => (dispatch) => {
   //Invalidate token
-  localStorage.clear('profile');
+  localStorage.clear('token');
   dispatch(userDelete());
 }
 

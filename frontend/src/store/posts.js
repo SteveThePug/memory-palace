@@ -29,6 +29,7 @@ export const postsGet = () => async(dispatch) => {
 
 export const postsCreate = (post) => async(dispatch) => {
   try {
+    console.log(post);
     const { data } = await api.createPost(post);
     dispatch(postsPush(data));
   }

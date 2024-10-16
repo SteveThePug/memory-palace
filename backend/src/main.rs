@@ -47,6 +47,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(db.clone()))
             .service(post::get_post)
             .service(post::get_posts)
+            .service(comment::get_comments)
             .service(user::get)
             .service(user::get_users)
             .service(user::sign_up)
