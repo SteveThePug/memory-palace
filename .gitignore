@@ -1,14 +1,21 @@
+# Builds
+*build
 *target
 *dist
-server
+
+# Old implementation
 server_old_js
+
+# Database files
 *.sqlite*
 *.db*
+
+# Env files (privvy)
 */.env
 
 # dependencies
-/node_modules
-/.pnp
+*/node_modules
+*/.pnp
 .pnp.js
 
 # testing
@@ -24,8 +31,7 @@ server_old_js
 .env.test.local
 .env.production.local
 
+# Debug logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-
