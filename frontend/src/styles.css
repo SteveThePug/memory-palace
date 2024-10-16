@@ -1,0 +1,224 @@
+/* Tailwind */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* Fonts */
+@font-face {
+    font-family: 'AldoTheApache'; 
+    src: url('fonts/AldotheApache.ttf') format('truetype'); 
+    font-weight: normal; 
+    font-style: normal; 
+}
+@font-face {
+    font-family: 'RobotFont'; 
+    src: url('fonts/Robot_Font.otf') format('opentype'); 
+    font-weight: normal; 
+    font-style: normal; 
+}
+@font-face {
+    font-family: 'm12'; 
+    src: url('fonts/m12.ttf') format('truetype'); 
+    font-weight: normal; 
+    font-style: normal; 
+}
+@font-face {
+    font-family: 'big_noodle_titling'; 
+    src: url('fonts/big_noodle_titling.ttf') format('truetype'); 
+    font-weight: normal; 
+    font-style: normal; 
+}
+@font-face {
+    font-family: 'CreatoDisplay'; 
+    src: url('fonts/CreatoDisplay-Bold.otf') format('opentype'); 
+    font-weight: normal; 
+    font-style: normal; 
+}
+
+/* Variables */
+:root {
+    /* Blue - Beige */
+  /* --primary: #153448;
+  --secondary: #3C5B6F;
+  --tertiary: #948979;
+  --quaternary: #f5bb78;
+  --background: #DFD0B8; */
+
+    /* Blue - Turqouise */
+  --primary: #161D6F;
+  --secondary: #0B2F9F;
+  --tertiary: #98DED9;
+  --quaternary: #C7FFD8;
+  --background: #C2EFD1;
+
+    /* Red - Blue */
+  /* --primary: #ff204e;
+  --secondary: #a0153e;
+  --tertiary: #5d0341;
+  --quaternary: #3a0e41;
+  --background: #00224d; */
+
+    /* Blue - Brown */
+  /* --primary: #35374B;
+  --secondary: #344955;
+  --tertiary: #50727b;
+  --quaternary: #78a083;
+  --background: #c7b077; */
+
+    /* Black - White */
+  /* --primary: black;
+  --secondary: black;
+  --tertiary: black;
+  --quaternary: white;
+  --background: white; */
+
+    /* Blue - White */
+  /* --primary: #201e43;
+  --secondary: #134b70;
+  --tertiary: #508c9b;
+  --quaternary: #cceeee;
+  --background: #eeeeee; */
+
+  --font-heading: big_noodle_titling;
+  --font-text: CreatoDisplay;
+  --font-size-text: 90%;
+  --font-size-heading: 2.5em;
+  --font-size-tableheading: 1.2em;
+}
+
+/* A5 Page */
+.a5page {
+    /* overflow: scroll; */
+    display:flex;
+    flex-direction: column;
+    font-family: var(--font-text);
+    height: 148mm;
+    width: 210mm;
+    padding: 5mm;
+    box-sizing: border-box;
+    background-color: var(--background);
+    box-shadow: 0 20px 20px rgba(0,0,0,0.2);
+    border: solid 2px var(--primary);
+}
+/* A4 Page */
+.a4page {
+    /* overflow: scroll; */
+    font-family: var(--font-text);
+    width: 210mm;
+    height: 297mm;
+    padding: 5mm;
+    box-sizing: border-box;
+    background-color: var(--background);
+    box-shadow: 0 20px 20px rgba(0,0,0,0.2);
+    border: solid 2px var(--primary);
+}
+body {
+  padding: 1cm;
+  background: var(--background);
+  color: var(--primary); /* Default text color */
+}
+/* Component Styling */
+h1, h2, h3, h4 {
+    color: var(--primary);
+    font-family: var(--font-heading);
+    text-transform: capitalize;
+}
+h1 {
+    font-size: var(--font-size-heading);
+}
+h2 {
+    margin-top: 10px;
+    border-bottom: 2px solid var(--primary);
+    border-radius: 2px;
+}
+p {
+    color: var(--secondary);
+    font-size: var(--font-size-text);
+    margin-top: 0.3em;
+    margin-bottom: 0.5em;
+}
+table {
+    color: var(--secondary);
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+td {
+    border: 2px solid var(--tertiary);
+    padding: 1px;
+    font-size: var(--font-size-text);
+    text-align: center;
+}
+th {
+    border: 2px solid var(--tertiary);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-tableheading);
+    background-color: var(--quaternary);
+    text-align: left;
+}
+a {
+    text-decoration: none;
+    color: inherit;
+}
+a:hover,
+a:visited {
+    color: inherit;
+}
+/* Classes */
+/* Cover Navigation (for ease of use) */
+.cover-nav {
+    position: fixed;
+    top: 0.5vh;  /* Position the element at the top of the screen */
+    left: 80vw; /* Position the element at the left of the screen */
+    border: 2px solid var(--tertiary);
+    width: 19.5vw; /* Make the element span the width of the screen (optional) */
+    background-color: var(--background); /* Set a background color to avoid overlap issues */
+    z-index: 1000; /* Ensures the element is above other content */
+}
+.cover-nav td, tr {
+    font-family: var(--font-text);
+    border: 0;
+}
+.cover-nav th {
+    text-align: center;
+    align-items: center;
+    border-bottom:2px solid var(--tertiary);
+}
+@media print {
+  .cover-nav {
+    display: none;
+  }
+}
+/* Cover letter styling */
+textarea {
+    width:100%;
+    height:100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 0px solid var(--primary);
+    resize: none;
+    font-family: var(--font-text);
+}
+/* Contact At Top of Page */
+.contact {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--primary);
+}
+.contact-details {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+}
+.contact-details p {
+    margin: 2px 0;
+}
+/* Interests and Skills at bottom of page */
+.interests {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.interests td,tr,th {
+    border: 0;
+}

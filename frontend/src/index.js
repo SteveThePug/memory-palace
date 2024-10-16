@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client'; // Updated import for React 18
 import { BrowserRouter } from 'react-router-dom';
 
-import './index.css'; // Importing your stylesheet
+import './styles.css'; // Importing your stylesheet
 
 import App from './App';
 import store from './store'
