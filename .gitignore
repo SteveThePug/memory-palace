@@ -3,6 +3,8 @@
 server
 server_old_js
 *.sqlite*
+*.db*
+*/.env
 
 # dependencies
 /node_modules
