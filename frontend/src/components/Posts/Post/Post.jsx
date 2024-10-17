@@ -6,10 +6,14 @@ import 'katex/dist/katex.min.css';
 import remarkGfm from 'remark-gfm';
 import { useSelector } from 'react-redux';
 import * as api from '../../../api';
+import { useDispatch } from 'react-redux';
+import { postsDelete, addComment } from '../../../store/posts';
 
 export default function Post({ postData }) {
-  const { post_id, title, markdown, author, comments } = postData;
-  const user = useSelector((state) => state.user?.result);
+  const dispatch = useDispatch();
+
+  const { post_id, user_id, title, markdown, author, comments } = postData;
+  const user = useSelector((state) => state.user?.user);
   const [isCommenting, setIsCommenting] = useState(false);
   const [comment, setComment] = useState('');
 
@@ -19,15 +23,21 @@ export default function Post({ postData }) {
       post_id,
       user_id: user.user_id,
     };
-    console.log(commentData);
-    await api.addComment(commentData);
+    dispatch(addComment(commentData))
     setIsCommenting(false); // Hide the comment input after submitting
   };
 
+  const handleDeletePost = async(post_id) => {
+    dispatch(postsDelete(post_id));
+  }
+
   return (
-    <div className='m-2 text-clip border-2 border-pink bg-stone-200'>
-      <h1 className='text-stone-1000 bg-yellow-500'>{author}</h1>
-      <h1 className='text-stone-1000 bg-pink-500'>{title}</h1>
+    <div>
+      <div className="flex space-between">
+        <h2 className="flex-1 text-left">{title}</h2>
+        {user.user_id == user_id && (<button onClick={() => handleDeletePost(post_id)}>delete</button>)}
+        <h2 className="flex-1 text-right">{author}</h2>
+      </div>
       <div className="overflow-y-scroll">
         <ReactMarkdown
           className='p-2'
@@ -38,7 +48,7 @@ export default function Post({ postData }) {
         </ReactMarkdown>
       </div>
 
-      <div className='border-2 p-2'>
+      <div>
         {comments.map((comment, index) => (
           <div key={index}>
             <h3>{comment.author}</h3>

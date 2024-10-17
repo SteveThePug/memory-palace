@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { postsCreate } from '../../store/posts.js';
 
-export default function Form() {
+export default function Form({ onFormSuccess }) {
   const dispatch = useDispatch();
   
   const [inputs, setInputs] = useState({ title: '', markdown: '' });
@@ -31,13 +31,15 @@ export default function Form() {
   const handleSubmit = (event) => {
     event.preventDefault();
     dispatch(postsCreate({...inputs}));
+    onFormSuccess()
   }
   
   return (
     <form 
       onSubmit={handleSubmit} 
-      className="flex flex-col max-w-lg mx-auto p-4 space-y-4 bg-white shadow-md rounded-lg"
+      className="flex flex-col max-w-lg mx-auto p-4 space-y-4"
     >
+      <h1 className="text-center">Upload A Post!</h1>
       <input 
         type="text" 
         name="title" 
@@ -53,6 +55,7 @@ export default function Form() {
         placeholder="Write your markdown here..."
         className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-40"
       />
+      <span className="text-sm text-gray-500 flex justify-center w-full">OR</span>
       <div className="flex items-center space-x-2">
         <label className="flex-grow">
           <span className="sr-only">Choose file</span>
@@ -68,7 +71,6 @@ export default function Form() {
               hover:file:bg-violet-100"
           />
         </label>
-        <span className="text-sm text-gray-500">or</span>
       </div>
       <input 
         type="submit" 

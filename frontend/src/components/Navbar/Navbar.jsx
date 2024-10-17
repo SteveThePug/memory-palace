@@ -2,45 +2,60 @@ import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { userLogOut, userSet } from '../../store/user.js';
-import Login  from './Login.jsx';
+import Login from './Login.jsx';
 import Modal from '../Modal.jsx'
+import Form from './Form.jsx'
 
 export default function Navbar() {
-  const user = useSelector((state) => state.user?.result);
+  const user = useSelector((state) => state.user?.user);
   const dispatch = useDispatch();
-  
+
+  // Login Modal
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const openLoginModal = () => setIsLoginModalOpen(true);
   const closeLoginModal = () => setIsLoginModalOpen(false);
+  // Post Modal
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+  const openPostModal = () => setIsPostModalOpen(true);
+  const closePostModal = () => setIsPostModalOpen(false);
 
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem('token'));
-    if (token) dispatch(userSet(token));
+    const token = localStorage.getItem('token');
+    if (token) dispatch(userSet(JSON.parse(token)));
   }, [dispatch]);
 
   const logout = () => dispatch(userLogOut());
 
   return (
-    <div className='flex justify-between p-4 bg-slate-100'>
+    <div className='flex justify-between p-4'>
       {/* Logo/Title */}
-      <NavLink to="/" className='text-xl font-bold text-blue-700'>STP</NavLink>
-
+      <NavLink to="/">Home</NavLink>
       {/* User Info */}
-      {user ? (
+      {user && (
         <>
-          <button onClick={logout} className='text-xl font-bold text-blue-700 hover:text-blue-900'>LOGOUT</button>
-          <NavLink className='text-xl font-bold text-blue-700 hover:text-blue-900'>{user.username}</NavLink>
+          <button onClick={openPostModal}>Upload</button>
+          <button onClick={logout}>Logout</button>
+          <NavLink>{user.username}</NavLink>
         </>
-      ) : (
-        <button onClick={openLoginModal} className='text-xl font-bold text-blue-700 hover:text-blue-900'>
-          LOGIN
-        </button>
+      )}
+      {/* Login */}
+      {!user && (
+        <>
+          <button onClick={openLoginModal}>LOGIN</button>
+        </>
       )}
 
       {/* Login Modal */}
       <Modal isOpen={isLoginModalOpen} onClose={closeLoginModal}>
         <Login onLoginSuccess={closeLoginModal} />
       </Modal>
+
+      {/* Post Modal */}
+      <Modal isOpen={isPostModalOpen} onClose={closePostModal}>
+        <Form onFormSuccess={closePostModal}/>
+      </Modal>
+
     </div>
+
   );
 }

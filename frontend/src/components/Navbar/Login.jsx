@@ -4,7 +4,7 @@ import { userSignIn, userSignUp } from '../../store/user.js'
 import { useDispatch } from 'react-redux';
 
 
-export default function Login() {
+export default function Login({onLoginSuccess}) {
   const dispatch = useDispatch();
   // State
   const [isSignup, setIsSignup] = useState(false);
@@ -20,6 +20,7 @@ export default function Login() {
       console.log('Signing up...');
       if (password === confirmPassword) {
         dispatch(userSignUp({username, email, password}));
+        onLoginSuccess()  
       }
       else {
         console.log("Passwords don't match") 
@@ -28,6 +29,7 @@ export default function Login() {
     else {
       console.log('Signing in...');
       dispatch(userSignIn({username, email, password}));
+      onLoginSuccess()  
     }
   };
   const handleChange = (event) => {
