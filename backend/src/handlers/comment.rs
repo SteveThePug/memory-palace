@@ -1,8 +1,8 @@
 use crate::db::{Comment, User};
 use crate::handlers::response_body::*;
-use actix_web::{get, delete, patch, post, web, HttpMessage, HttpRequest, HttpResponse};
-use sqlx::SqlitePool;
 use crate::handlers::user::get_username;
+use actix_web::{delete, get, patch, post, web, HttpMessage, HttpRequest, HttpResponse};
+use sqlx::SqlitePool;
 
 const N: u32 = 10;
 const GET_COMMENTS: &str = "SELECT * FROM comment LIMIT ?";
@@ -75,7 +75,28 @@ async fn add_comment(
         .execute(pool.get_ref())
         .await
     {
-        Ok(_) => HttpResponse::Ok().body(CONFIRM_INSERT),
+        Ok(result) => {
+            let comment_id = result.last_insert_rowid();
+            let inserted_comment: Comment = match sqlx::query_as(GET_COMMENT)
+                .bind(comment_id)
+                .fetch_one(pool.as_ref())
+                .await
+            {
+                Ok(comment) => comment,
+                Err(e) => return HttpResponse::InternalServerError().body(e.to_string()),
+            };
+
+            let comment_response = CommentResponse {
+                comment_id: inserted_comment.comment_id.unwrap(),
+                post_id: inserted_comment.post_id,
+                user_id: inserted_comment.user_id,
+                content: inserted_comment.content.clone(),
+                created_at: inserted_comment.created_at.unwrap(),
+                author: user.username.clone(),
+            };
+
+            HttpResponse::Ok().json(comment_response)
+        }
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }
@@ -100,7 +121,7 @@ async fn delete_comment(
         Ok(false) => return HttpResponse::Unauthorized().body(USER_MISMATCH),
         Err(sqlx::Error::RowNotFound) => return HttpResponse::NotFound().body(COMMENT_NOT_FOUND),
         Err(err) => return HttpResponse::InternalServerError().body(err.to_string()),
-        _ => ()
+        _ => (),
     }
 
     let delete_query = "DELETE FROM comment WHERE id = ?";
@@ -135,7 +156,7 @@ async fn edit_comment(
         Ok(false) => return HttpResponse::Unauthorized().body(USER_MISMATCH),
         Err(sqlx::Error::RowNotFound) => return HttpResponse::NotFound().body(COMMENT_NOT_FOUND),
         Err(err) => return HttpResponse::InternalServerError().body(err.to_string()),
-        Ok(true) => ()
+        Ok(true) => (),
     };
 
     let update_query = "UPDATE comment SET content = ? WHERE id = ?";

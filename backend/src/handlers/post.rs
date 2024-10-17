@@ -230,14 +230,39 @@ async fn add_post(
         Some(u) => u
     };
 
-     match sqlx::query(ADD_POST)
+    let result = match sqlx::query(ADD_POST)
         .bind(&post.title)
         .bind(&post.markdown)
         .bind(user.user_id)
         .execute(pool.as_ref())
         .await
     {
-        Ok(_) => HttpResponse::Ok().body(CONFIRM_INSERT),
-        Err(e) => HttpResponse::InternalServerError().body(e.to_string()),
-    }
+        Ok(result) => result,
+        Err(e) => return HttpResponse::InternalServerError().body(e.to_string()),
+    };
+
+    // Retrieve the last inserted post
+    let post_id = result.last_insert_rowid();
+    let inserted_post: Post = match sqlx::query_as(GET_POST)
+        .bind(post_id)
+        .fetch_one(pool.as_ref())
+        .await
+    {
+        Ok(post) => post,
+        Err(e) => return HttpResponse::InternalServerError().body(e.to_string()),
+    };
+
+    // Construct the PostResponse
+    let post_response = PostResponse {
+        post_id: inserted_post.post_id.unwrap(),
+        user_id: inserted_post.user_id.unwrap(),
+        title: inserted_post.title,
+        markdown: inserted_post.markdown,
+        created_at: inserted_post.created_at.unwrap(),
+        updated_at: inserted_post.updated_at.unwrap(),
+        author: user.username.clone(),
+        comments: vec![], // Assuming no comments initially
+    };
+
+    HttpResponse::Ok().json(post_response)
 }
